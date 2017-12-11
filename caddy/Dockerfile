@@ -1,21 +1,15 @@
-FROM alpine:3.4
+FROM zuohuadong/caddy:alpine
 
-MAINTAINER Eric Pfeiffer <computerfr33k@users.noreply.github.com>
 
-ENV caddy_version=0.9.3
+MAINTAINER Huadong Zuo <admin@zuohuadong.cn>
 
-LABEL caddy_version="$caddy_version" architecture="amd64"
+ARG plugins="cors"
 
-RUN apk update \
-    && apk upgrade \
-    && apk add tar curl
+## ARG plugins="cors cgi cloudflare azure linode"
 
-RUN curl --silent --show-error --fail --location \
-        --header "Accept: application/tar+gzip, application/x-gzip, application/octet-stream" -o - \
-        "https://github.com/mholt/caddy/releases/download/v$caddy_version/caddy_linux_amd64.tar.gz" \
-        | tar --no-same-owner -C /usr/bin/ -xz caddy_linux_amd64 \
-    && mv /usr/bin/caddy_linux_amd64 /usr/bin/caddy \
-    && chmod 0755 /usr/bin/caddy
+
+RUN caddyplug install ${plugins}
+    
 
 EXPOSE 80 443 2015
 
