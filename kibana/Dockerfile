@@ -1,8 +1,4 @@
-FROM kibana:latest
-#RUN gosu kibana kibana-plugin install elastic/sense/latest
+FROM docker.elastic.co/kibana/kibana:5.4.1
 
 EXPOSE 5201 5601
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
-
-CMD ["kibana"]
