@@ -16,7 +16,7 @@ services:
         build:
             context: ./workspace
             args:
-                - INSTALL_XDEBUG=false
+                - INSTALL_XDEBUG=true
                 - INSTALL_MONGO=false
                 - INSTALL_NODE=false
                 - INSTALL_YARN=false
@@ -37,13 +37,33 @@ services:
            - "2222:22"
         tty: true
 
+
+### Perl Workspace Utilities Container ###########################
+
+    perl_workspace:
+        build:
+            context: ./perl_workspace
+            args:
+                - INSTALL_WORKSPACE_SSH=false
+        volumes_from:
+            - applications
+        extra_hosts:
+            # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
+            - "dockerhost:10.0.75.1"
+        ports:
+           - "2225:22"
+        links:
+          # for mysql container
+          - "mysql:db"
+        tty: true
+
 ### PHP-FPM Container #######################################
 
     php-fpm:
         build:
             context: ./php-fpm
             args:
-                - INSTALL_XDEBUG=false
+                - INSTALL_XDEBUG=true
                 - INSTALL_MONGO=false
                 - INSTALL_ZIP_ARCHIVE=false
                 - INSTALL_MEMCACHED=false
@@ -76,8 +96,8 @@ services:
         volumes:
             - ./logs/nginx/:/var/log/nginx
         ports:
-            - "80:80"
-            - "443:443"
+            - "8888:80"
+            - "4433:443"
         links:
             - php-fpm
 
@@ -115,7 +135,7 @@ services:
         build: 
             context: ./mysql
             args:
-                - MYSQL_DATABASE=homestead
+                - MYSQL_DATABASE=podchaser
                 - MYSQL_USER=homestead
                 - MYSQL_PASSWORD=secret
                 - MYSQL_ROOT_PASSWORD=root
@@ -310,6 +330,20 @@ services:
             - "9300:9300"
         links:
             - php-fpm
+            - workspace
+
+    kibana:
+        build:
+          context: ./kibana
+          args:
+            plugins: elasticsearch/marvel/latest
+        ports:
+            - "5201:5201"
+            - "5601:5601"
+        links:
+            - elasticsearch
+        environment:
+              - ELASTICSEARCH_URL=http://elasticsearch:9200
 
 ### Volumes Setup ###########################################
 

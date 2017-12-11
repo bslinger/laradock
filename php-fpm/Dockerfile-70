@@ -37,13 +37,18 @@ MAINTAINER Mahmoud Zalt <mahmoud@zalt.me>
 #   - ...
 #
 
+## pcntl
+
+RUN docker-php-ext-install pcntl
+
+RUN docker-php-ext-install bcmath
+
 #####################################
 # xDebug:
 #####################################
 
 ARG INSTALL_XDEBUG=false
 RUN if [ ${INSTALL_XDEBUG} = true ]; then \
-    # Install the xdebug extension
     pecl install xdebug && \
     docker-php-ext-enable xdebug \
 ;fi
@@ -57,7 +62,6 @@ COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 ARG INSTALL_MONGO=false
 RUN if [ ${INSTALL_MONGO} = true ]; then \
-    # Install the mongodb extension
     pecl install mongodb && \
     docker-php-ext-enable mongodb \
 ;fi
@@ -68,7 +72,6 @@ RUN if [ ${INSTALL_MONGO} = true ]; then \
 
 ARG INSTALL_ZIP_ARCHIVE=false
 RUN if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
-    # Install the zip extension
     pecl install zip && \
     docker-php-ext-enable zip \
 ;fi
@@ -79,7 +82,6 @@ RUN if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
 
 ARG INSTALL_MEMCACHED=false
 RUN if [ ${INSTALL_MEMCACHED} = true ]; then \
-    # Install the php memcached extension
     curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz" \
     && mkdir -p memcached \
     && tar -C memcached -zxvf /tmp/memcached.tar.gz --strip 1 \
@@ -104,7 +106,6 @@ ENV INSTALL_AEROSPIKE_EXTENSION ${INSTALL_AEROSPIKE_EXTENSION}
 # Copy aerospike configration for remote debugging
 COPY ./aerospike.ini /usr/local/etc/php/conf.d/aerospike.ini
 RUN if [ ${INSTALL_AEROSPIKE_EXTENSION} = true ]; then \
-    # Install the php aerospike extension
     curl -L -o /tmp/aerospike-client-php.tar.gz "https://github.com/luciano-jr/aerospike-client-php/archive/master.tar.gz" \
     && mkdir -p aerospike-client-php \
     && tar -C aerospike-client-php -zxvf /tmp/aerospike-client-php.tar.gz --strip 1 \
@@ -135,7 +136,6 @@ COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 ARG CODEIGNITER=false
 RUN if [ ${CODEIGNITER} = true ]; then \
-    # Install Codeigniter PHP extentions requirements
      docker-php-ext-install mysqli && \
      docker-php-ext-install tokenizer \
 ;fi

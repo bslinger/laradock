@@ -81,6 +81,10 @@ USER root
 
 COPY ./crontab /var/spool/cron/crontabs
 
+# Extra Stuff
+
+RUN apt-get update && apt-get install -y --force-yes php7.0-bcmath
+
 #####################################
 # xDebug:
 #####################################

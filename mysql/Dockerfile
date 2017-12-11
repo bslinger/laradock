@@ -25,3 +25,6 @@ ADD my.cnf /etc/mysql/conf.d/my.cnf
 CMD ["mysqld", "--init-file=/etc/mysql/startup"]
 
 EXPOSE 3306
+
+# login to mysql with root user
+# docker-compose exec mysql sh -c 'export MYSQL_PWD="$MYSQL_ROOT_PASSWORD"; mysql'
