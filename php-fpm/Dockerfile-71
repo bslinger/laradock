@@ -335,6 +335,8 @@ RUN if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
     docker-php-ext-enable imagick \
 ;fi
 
+RUN docker-php-ext-install pcntl
+
 #
 #--------------------------------------------------------------------------
 # Final Touch
