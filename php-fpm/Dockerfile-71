@@ -73,20 +73,6 @@ RUN if [ ${INSTALL_PG_CLIENT} = true ]; then \
 ;fi
 
 #####################################
-# xDebug:
-#####################################
-
-ARG INSTALL_XDEBUG=false
-RUN if [ ${INSTALL_XDEBUG} = true ]; then \
-    # Install the xdebug extension
-    pecl install xdebug && \
-    docker-php-ext-enable xdebug \
-;fi
-
-# Copy xdebug configuration for remote debugging
-COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
-
-#####################################
 # Blackfire:
 #####################################
 
@@ -330,10 +316,24 @@ ARG INSTALL_IMAGEMAGICK=false
 ENV INSTALL_IMAGEMAGICK ${INSTALL_IMAGEMAGICK}
 RUN if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
     apt-get update -y && \
-    apt-get install -y libmagickwand-dev imagemagick && \ 
+    apt-get install -y libmagickwand-dev imagemagick && \
     pecl install imagick && \
     docker-php-ext-enable imagick \
 ;fi
+
+#####################################
+# xDebug:
+#####################################
+
+ARG INSTALL_XDEBUG=false
+RUN if [ ${INSTALL_XDEBUG} = true ]; then \
+    # Install the xdebug extension
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug \
+;fi
+
+# Copy xdebug configuration for remote debugging
+COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 #
 #--------------------------------------------------------------------------
@@ -341,8 +341,14 @@ RUN if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
 #--------------------------------------------------------------------------
 #
 
+RUN apt-get update
+RUN apt-get install telnet
+
 ADD ./laravel.ini /usr/local/etc/php/conf.d
 ADD ./xlaravel.pool.conf /usr/local/etc/php-fpm.d/
+
+RUN curl -L https://github.com/DataDog/dd-trace-php/releases/download/0.14.1/datadog-php-tracer_0.14.1-beta_amd64.deb > datadog-tracer.deb
+RUN dpkg -i datadog-tracer.deb
 
 #RUN rm -r /var/lib/apt/lists/*
 

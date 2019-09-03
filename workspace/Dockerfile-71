@@ -681,6 +681,9 @@ RUN if [ ${INSTALL_DUSK_DEPS} = true ]; then \
 #--------------------------------------------------------------------------
 #
 
+RUN curl -L https://github.com/DataDog/dd-trace-php/releases/download/0.14.1/datadog-php-tracer_0.14.1-beta_amd64.deb > datadog-tracer.deb
+RUN dpkg -i datadog-tracer.deb
+
 # Clean up
 USER root
 RUN apt-get clean && \
