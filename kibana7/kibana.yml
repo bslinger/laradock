@@ -1,0 +1,4 @@
+elasticsearch:
+  hosts:
+    - http://elasticsearch7:9200
+server.host: 0.0.0.0
