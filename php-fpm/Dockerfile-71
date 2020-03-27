@@ -347,9 +347,6 @@ RUN apt-get install telnet
 ADD ./laravel.ini /usr/local/etc/php/conf.d
 ADD ./xlaravel.pool.conf /usr/local/etc/php-fpm.d/
 
-RUN curl -L https://github.com/DataDog/dd-trace-php/releases/download/0.14.1/datadog-php-tracer_0.14.1-beta_amd64.deb > datadog-tracer.deb
-RUN dpkg -i datadog-tracer.deb
-
 #RUN rm -r /var/lib/apt/lists/*
 
 RUN usermod -u 1000 www-data
